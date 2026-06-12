@@ -1,58 +1,194 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Badar Net
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Billing ISP & Manajemen MikroTik Hotspot — rewrite modern dari PHPNuxBill (15+ tahun legacy PHP) ke arsitektur Laravel 13 + React 19 + Inertia.js v3.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Panel Admin
+- **Dasbor** — Statistik pelanggan aktif, pendapatan harian/bulanan, transaksi terakhir
+- **Manajemen Pelanggan** — CRUD pelanggan dengan pencarian, filter status, paginasi
+- **Paket Layanan** — Hotspot, PPPoE, Balance dengan konfigurasi bandwidth, validitas, harga
+- **Router MikroTik** — Tambah/edit router, test koneksi, status online/offline
+- **Bandwidth & Pool IP** — Profil kecepatan dan IP pool untuk PPPoE
+- **Isi Ulang** — Recharge pelanggan dengan metode manual, voucher, atau balance
+- **Voucher** — Generate kode voucher massal, cetak dengan QR code
+- **Transaksi** — Riwayat lengkap semua transaksi billing
+- **Gateway Pembayaran** — Konfigurasi Midtrans, Xendit, Tripay, Manual
+- **Audit Gateway** — Trail lengkap transaksi payment gateway
+- **Laporan** — Laporan transaksi harian/periodik dengan filter
+- **Log Aktivitas** — Sistem log dan log pengiriman pesan
+- **Pesan** — Kirim pesan tunggal/massal via WhatsApp, SMS, Email, Inbox
+- **Field Kustom** — Field dinamis untuk data pelanggan
+- **Pengaturan** — Aplikasi, lokalisasi, user admin, database, maintenance mode
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Portal Pelanggan
+- **Dasbor** — Info akun, paket aktif, saldo, transaksi terakhir
+- **Paket** — Jelajahi paket yang tersedia
+- **Transaksi** — Riwayat transaksi dan invoice
+- **Profil** — Update data dan ubah password
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### API
+- Endpoint REST untuk integrasi pihak ketiga
+- Webhook pembayaran (Midtrans, Xendit, Tripay)
+- Autentikasi Sanctum
 
-## Learning Laravel
+### Integrasi MikroTik
+- Raw TCP RouterOS API client
+- 4 device driver: Hotspot, PPPoE, Radius, Dummy
+- Queue-based sync (non-blocking)
+- Auto-sync saat recharge
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer | Technology |
+|-------|-----------|
+| Backend | Laravel 13 (PHP 8.3+) |
+| Frontend | React 19 + TypeScript |
+| Bridge | Inertia.js v3 |
+| UI | shadcn/ui + TailwindCSS 4 |
+| Build | Vite 8 |
+| Database | MySQL/MariaDB |
+| Auth | Laravel Session (dual guard) |
+| API Auth | Laravel Sanctum |
+| Icons | Lucide React |
+| Dark Mode | next-themes (light/dark/system) |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Instalasi
 
-## Agentic Development
+### Prasyarat
+- PHP 8.3+
+- MySQL/MariaDB
+- Node.js 18+
+- Composer 2.x
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Setup
 
 ```bash
-composer require laravel/boost --dev
+# Clone repository
+git clone https://github.com/mickirr-create/isp-badar-net.git
+cd isp-badar-net
 
-php artisan boost:install
+# Install dependencies PHP
+composer install
+
+# Install dependencies JS
+npm install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Edit .env sesuai konfigurasi database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=phpnuxbill
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Jalankan migrasi dan seed
+php artisan migrate
+php artisan db:seed
+
+# Build frontend
+npm run build
+
+# Jalankan server
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Login Default
 
-## Contributing
+| User | Password | Role |
+|------|----------|------|
+| `admin` | `admin` | SuperAdmin |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Akses: `http://localhost:8000/admin`
 
-## Code of Conduct
+## Struktur Proyek
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+isp-badar-net/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/          # 16 controller admin
+│   │   ├── Customer/       # 4 controller pelanggan
+│   │   └── Api/            # 3 controller API
+│   ├── Models/             # 21 model Eloquent
+│   ├── Services/
+│   │   ├── Network/        # MikroTik + 4 device driver
+│   │   └── Payment/        # 4 payment gateway
+│   └── Jobs/               # 3 queue job MikroTik sync
+├── database/migrations/    # 26 migrasi database
+├── resources/js/
+│   ├── components/ui/      # 16 komponen shadcn/ui
+│   ├── layouts/            # Sidebar layout dengan dark mode
+│   └── pages/
+│       ├── Admin/          # 30+ halaman admin
+│       └── Customer/       # 5 halaman pelanggan
+├── routes/
+│   ├── web.php             # 102 rute
+│   └── api.php             # Rute API
+└── vite.config.js
+```
 
-## Security Vulnerabilities
+## Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+26 tabel dengan prefix `tbl_`:
 
-## License
+| Tabel | Deskripsi |
+|-------|-----------|
+| `tbl_users` | Akun admin/staf |
+| `tbl_customers` | Akun pelanggan |
+| `tbl_plans` | Paket internet |
+| `tbl_bandwidth` | Profil bandwidth |
+| `tbl_routers` | Router MikroTik |
+| `tbl_pool` | IP pool PPPoE |
+| `tbl_user_recharges` | Langganan aktif |
+| `tbl_transactions` | Riwayat billing |
+| `tbl_voucher` | Kode voucher |
+| `tbl_payment_gateway` | Transaksi gateway |
+| `tbl_appconfig` | Pengaturan aplikasi |
+| `tbl_logs` | Log aktivitas |
+| `tbl_message_logs` | Log pengiriman pesan |
+| ... | dll |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## API Endpoints
+
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/auth/login` | POST | Login |
+| `/api/auth/logout` | POST | Logout |
+| `/api/customer/me` | GET | Info pelanggan |
+| `/api/customer/balance` | GET | Saldo |
+| `/api/customer/active-plan` | GET | Paket aktif |
+| `/api/customer/plans` | GET | Daftar paket |
+| `/api/customer/transactions` | GET | Riwayat transaksi |
+| `/api/callback/midtrans` | POST | Webhook Midtrans |
+| `/api/callback/xendit` | POST | Webhook Xendit |
+| `/api/callback/tripay` | POST | Webhook Tripay |
+
+## Screenshot
+
+> Screenshot dapat ditambahkan setelah aplikasi berjalan.
+
+## Kontribusi
+
+1. Fork repository
+2. Buat branch (`git checkout -b feature/nama-fitur`)
+3. Commit (`git commit -m 'Tambah fitur'`)
+4. Push (`git push origin feature/nama-fitur`)
+5. Buka Pull Request
+
+## Lisensi
+
+MIT License
+
+## Credits
+
+- [PHPNuxBill](https://github.com/hotspotbilling/phpnuxbill) — Aplikasi original
+- [Laravel](https://laravel.com) — Backend framework
+- [React](https://react.dev) — Frontend library
+- [Inertia.js](https://inertiajs.com) — Bridge Laravel-React
+- [shadcn/ui](https://ui.shadcn.com) — Komponen UI
+- [Tailwind CSS](https://tailwindcss.com) — Utility-first CSS
