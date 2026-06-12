@@ -29,6 +29,7 @@ import {
     Activity,
     BarChart3,
     MessageSquare,
+    Calendar,
 } from 'lucide-react';
 
 const adminNav = [
