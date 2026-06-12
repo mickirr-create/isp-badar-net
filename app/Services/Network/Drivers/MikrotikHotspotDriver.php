@@ -244,6 +244,66 @@ class MikrotikHotspotDriver implements NetworkDeviceAdapter
         }
     }
 
+    public function throttleCustomer(Customer $customer, string $throttleProfile): bool
+    {
+        try {
+            $this->client->connect();
+
+            $response = $this->client->sendRequest(
+                '/ip/hotspot/user print',
+                ['.proplist' => '.id'],
+                "name={$customer->username}"
+            );
+
+            foreach ($response as $sentence) {
+                if (isset($sentence['=.id'])) {
+                    $this->client->sendCommand('/ip/hotspot/user/set', [
+                        'numbers' => $sentence['=.id'],
+                        'profile' => $throttleProfile,
+                    ]);
+                    $this->client->disconnect();
+                    return true;
+                }
+            }
+
+            $this->client->disconnect();
+            return false;
+        } catch (\Throwable $e) {
+            Log::error("MikrotikHotspot throttleCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
+    public function restoreCustomer(Customer $customer, string $originalProfile): bool
+    {
+        try {
+            $this->client->connect();
+
+            $response = $this->client->sendRequest(
+                '/ip/hotspot/user print',
+                ['.proplist' => '.id'],
+                "name={$customer->username}"
+            );
+
+            foreach ($response as $sentence) {
+                if (isset($sentence['=.id'])) {
+                    $this->client->sendCommand('/ip/hotspot/user/set', [
+                        'numbers' => $sentence['=.id'],
+                        'profile' => $originalProfile,
+                    ]);
+                    $this->client->disconnect();
+                    return true;
+                }
+            }
+
+            $this->client->disconnect();
+            return false;
+        } catch (\Throwable $e) {
+            Log::error("MikrotikHotspot restoreCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
     private function addHotspotUser(Customer $customer, Plan $plan): void
     {
         $args = [

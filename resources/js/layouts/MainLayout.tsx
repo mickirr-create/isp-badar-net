@@ -42,6 +42,7 @@ const adminNav = [
     { label: 'Voucher', href: 'admin.vouchers.index', icon: Ticket },
     { label: 'Transaksi', href: 'admin.transactions.index', icon: FileText },
     { label: 'Gateway Pembayaran', href: 'admin.payment-gateways.index', icon: CreditCard },
+    { label: 'Siklus Billing', href: 'admin.billing-cycles.index', icon: Calendar },
     { label: 'Kirim Pesan', href: 'admin.messages.send', icon: MessageSquare },
     { label: 'Laporan', href: 'admin.reports.index', icon: BarChart3 },
     { label: 'Log Aktivitas', href: 'admin.logs.index', icon: Activity },

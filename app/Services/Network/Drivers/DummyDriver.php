@@ -20,4 +20,6 @@ class DummyDriver implements NetworkDeviceAdapter
     public function isCustomerOnline(Customer $customer): bool { return false; }
     public function disconnectCustomer(Customer $customer): bool { return true; }
     public function connectCustomer(Customer $customer, string $ip, string $mac): bool { return true; }
+    public function throttleCustomer(Customer $customer, string $throttleProfile): bool { return true; }
+    public function restoreCustomer(Customer $customer, string $originalProfile): bool { return true; }
 }

@@ -233,6 +233,68 @@ class MikrotikPppoeDriver implements NetworkDeviceAdapter
         return false;
     }
 
+    public function throttleCustomer(Customer $customer, string $throttleProfile): bool
+    {
+        try {
+            $this->client->connect();
+
+            $username = !empty($customer->pppoe_username) ? $customer->pppoe_username : $customer->username;
+            $response = $this->client->sendRequest(
+                '/ppp/secret print',
+                ['.proplist' => '.id'],
+                "name={$username}"
+            );
+
+            foreach ($response as $sentence) {
+                if (isset($sentence['=.id'])) {
+                    $this->client->sendCommand('/ppp/secret/set', [
+                        'numbers' => $sentence['=.id'],
+                        'profile' => $throttleProfile,
+                    ]);
+                    $this->client->disconnect();
+                    return true;
+                }
+            }
+
+            $this->client->disconnect();
+            return false;
+        } catch (\Throwable $e) {
+            Log::error("MikrotikPppoe throttleCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
+    public function restoreCustomer(Customer $customer, string $originalProfile): bool
+    {
+        try {
+            $this->client->connect();
+
+            $username = !empty($customer->pppoe_username) ? $customer->pppoe_username : $customer->username;
+            $response = $this->client->sendRequest(
+                '/ppp/secret print',
+                ['.proplist' => '.id'],
+                "name={$username}"
+            );
+
+            foreach ($response as $sentence) {
+                if (isset($sentence['=.id'])) {
+                    $this->client->sendCommand('/ppp/secret/set', [
+                        'numbers' => $sentence['=.id'],
+                        'profile' => $originalProfile,
+                    ]);
+                    $this->client->disconnect();
+                    return true;
+                }
+            }
+
+            $this->client->disconnect();
+            return false;
+        } catch (\Throwable $e) {
+            Log::error("MikrotikPppoe restoreCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
     private function findPpoeSecretId(Customer $customer): ?string
     {
         $response = $this->client->sendRequest(

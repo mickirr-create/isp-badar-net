@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Log;
 
 class BillingService
 {
+    private BillingCycleService $billingCycle;
+
+    public function __construct(BillingCycleService $billingCycle)
+    {
+        $this->billingCycle = $billingCycle;
+    }
+
     public function recharge(
         int $customerId,
         string $routerName,
@@ -119,6 +126,11 @@ class BillingService
 
             if (in_array($plan->device, ['MikrotikHotspot', 'MikrotikPppoe', 'Radius'])) {
                 SyncMikrotikCustomer::dispatch($customerId, $planId, $routerName, 'add');
+            }
+
+            // Restore speed if customer was throttled
+            if ($existingRecharge && $existingRecharge->throttle_applied) {
+                $this->billingCycle->restoreSpeed($existingRecharge);
             }
 
             return $invoice;

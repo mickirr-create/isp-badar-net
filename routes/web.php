@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\BandwidthController;
+use App\Http\Controllers\Admin\BillingCycleController;
 use App\Http\Controllers\Admin\CustomFieldController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\LogsController;
@@ -114,6 +115,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::get('/custom-fields', [CustomFieldController::class, 'index'])->name('custom-fields.index');
     Route::post('/custom-fields', [CustomFieldController::class, 'store'])->name('custom-fields.save');
     Route::delete('/custom-fields', [CustomFieldController::class, 'destroy'])->name('custom-fields.destroy');
+
+    // Billing Cycles
+    Route::get('/billing-cycles', [BillingCycleController::class, 'index'])->name('billing-cycles.index');
+    Route::post('/billing-cycles', [BillingCycleController::class, 'store'])->name('billing-cycles.store');
+    Route::put('/billing-cycles/{customer}', [BillingCycleController::class, 'update'])->name('billing-cycles.update');
+    Route::post('/billing-cycles/{customer}/send-notification', [BillingCycleController::class, 'sendNotification'])->name('billing-cycles.send-notification');
+    Route::post('/billing-cycles/{customer}/apply-throttle', [BillingCycleController::class, 'applyThrottle'])->name('billing-cycles.apply-throttle');
+    Route::post('/billing-cycles/{customer}/restore-speed', [BillingCycleController::class, 'restoreSpeed'])->name('billing-cycles.restore-speed');
 
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

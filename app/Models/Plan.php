@@ -27,6 +27,7 @@ class Plan extends Model
         'is_radius',
         'pool',
         'type',
+        'throttle_profile',
         'created_at',
     ];
 

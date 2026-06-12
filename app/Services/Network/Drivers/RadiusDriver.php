@@ -164,6 +164,38 @@ class RadiusDriver implements NetworkDeviceAdapter
         return false;
     }
 
+    public function throttleCustomer(Customer $customer, string $throttleProfile): bool
+    {
+        try {
+            $conn = $this->getConnection();
+
+            // Update rate limit to throttle profile
+            $this->upsertRadcheck($conn, $customer->username, 'Mikrotik-Rate-Limit', $throttleProfile);
+
+            $this->disconnectCustomer($customer);
+            return true;
+        } catch (\Throwable $e) {
+            Log::error("Radius throttleCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
+    public function restoreCustomer(Customer $customer, string $originalProfile): bool
+    {
+        try {
+            $conn = $this->getConnection();
+
+            // Restore original rate limit
+            $this->upsertRadcheck($conn, $customer->username, 'Mikrotik-Rate-Limit', $originalProfile);
+
+            $this->disconnectCustomer($customer);
+            return true;
+        } catch (\Throwable $e) {
+            Log::error("Radius restoreCustomer failed: {$e->getMessage()}");
+            return false;
+        }
+    }
+
     private function getConnection()
     {
         try {

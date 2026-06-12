@@ -18,4 +18,6 @@ interface NetworkDeviceAdapter
     public function isCustomerOnline(Customer $customer): bool;
     public function disconnectCustomer(Customer $customer): bool;
     public function connectCustomer(Customer $customer, string $ip, string $mac): bool;
+    public function throttleCustomer(Customer $customer, string $throttleProfile): bool;
+    public function restoreCustomer(Customer $customer, string $originalProfile): bool;
 }
