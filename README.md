@@ -1,6 +1,6 @@
 # Badar Net
 
-Sistem Billing ISP & Manajemen MikroTik Hotspot — rewrite modern dari PHPNuxBill (15+ tahun legacy PHP) ke arsitektur Laravel 13 + React 19 + Inertia.js v3.
+Sistem Billing ISP & Manajemen MikroTik Hotspot — rewrite modern dari PHP (15+ tahun legacy PHP) ke arsitektur Laravel 13 + React 19 + Inertia.js v3.
 
 ## Fitur Utama
 
